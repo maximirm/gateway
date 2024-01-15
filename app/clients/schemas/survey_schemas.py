@@ -25,9 +25,12 @@ class QuestionAnalyzed(Question):
     analysis_respondents: Optional[dict] = None
 
 
-class Survey(BaseModel):
-    id: UUID4
+class SurveyCreate(BaseModel):
     creator_id: UUID4
     title: str
     description: str
+
+
+class Survey(SurveyCreate):
+    id: UUID4
     questions: list[Question] = []
