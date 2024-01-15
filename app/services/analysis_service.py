@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from app.clients.schemas.schemas import QuestionAnalyzed, Question
+from app.clients.schemas.survey_schemas import QuestionAnalyzed, Question
 from app.clients import analysis_service_client, survey_service_client
 
 

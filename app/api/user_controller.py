@@ -1,4 +1,3 @@
-from typing import List
 from uuid import UUID
 
 from fastapi import Header, APIRouter, Request
@@ -32,7 +31,7 @@ async def get_user(
     return await user_service.get_user(token)
 
 
-@router.get("/users/all/", response_model=List[UserResponse])
+@router.get("/users/all/", response_model=list[UserResponse])
 @has_role(["admin"])
 async def get_all_users(request: Request):
     return await user_service.get_all_users()
@@ -42,4 +41,5 @@ async def get_all_users(request: Request):
 @has_role(["admin"])
 async def delete_user(request: Request, user_id: UUID):
     await user_service.delete_user(user_id)
+    # TODO: Delete all surveys by creator ID
     return JSONResponse(content=f"User with id {user_id} deleted successfully", status_code=200)

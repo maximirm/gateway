@@ -4,7 +4,7 @@ from uuid import UUID
 import httpx
 from fastapi import HTTPException
 
-from app.clients.schemas.schemas import QuestionAnalyzed, Question
+from app.clients.schemas.survey_schemas import QuestionAnalyzed, Question
 
 
 def custom_serializer(obj):

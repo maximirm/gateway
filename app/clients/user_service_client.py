@@ -1,5 +1,4 @@
 import json
-from typing import List
 from uuid import UUID
 
 import httpx
@@ -24,7 +23,6 @@ async def login(login_data: UserLogin):
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
     response_json = response.json()
-    print(response_json)
     return response_json.get('token', None)
 
 
@@ -41,7 +39,7 @@ async def fetch_user_by_token(token: str) -> UserResponse:
     return UserResponse(**user_data)
 
 
-async def fetch_all_users() -> List[UserResponse]:
+async def fetch_all_users() -> list[UserResponse]:
     url = "http://localhost:8003/users/all/"
 
     async with httpx.AsyncClient() as client:
@@ -50,7 +48,7 @@ async def fetch_all_users() -> List[UserResponse]:
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
     user_data = response.json()
-    return [UserResponse(**user_data) for user_data in user_data]
+    return [UserResponse(**user) for user in user_data]
 
 
 async def delete_user(user_id: UUID):
