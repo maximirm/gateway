@@ -16,7 +16,7 @@ def custom_serializer(obj):
 
 
 async def fetch_analyzed_question(question: Question) -> QuestionAnalyzed:
-    url = f"http://localhost:8001/analyze/question"
+    url = f"http://localhost:8001/analyze/question/"
     async with httpx.AsyncClient() as client:
         json_question = json.dumps(dict(question), default=custom_serializer)
         response = await client.post(url, data=json_question, headers={"Content-Type": "application/json"})

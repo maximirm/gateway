@@ -8,7 +8,7 @@ from app.clients.schemas.schemas import Question
 
 
 async def fetch_question(question_id: UUID) -> Question:
-    url = f"http://localhost:8000/questions/{question_id}"
+    url = f"http://localhost:8000/questions/{question_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 

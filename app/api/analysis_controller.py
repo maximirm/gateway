@@ -9,8 +9,8 @@ from app.services import analysis_service
 router = APIRouter()
 
 
-@router.get("/analyze/question/{question_id}", response_model=schemas.QuestionAnalyzed)
+@router.get("/analyze/question/{question_id}/", response_model=schemas.QuestionAnalyzed)
 @has_role(["admin", "editor"])
-async def analyze_question(request: Request, question_id: UUID, user_id=Depends(get_current_user_id)):
+async def analyze_question(request: Request, question_id: UUID):
 
     return await analysis_service.analyze_question(question_id)
