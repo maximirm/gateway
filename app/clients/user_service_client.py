@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 import httpx
 from fastapi import HTTPException
@@ -18,3 +19,14 @@ async def fetch_user_by_token(token: str) -> UserResponse:
     user_data = response.json()
     return UserResponse(**user_data)
 
+
+async def fetch_all_users() -> List[UserResponse]:
+    url = f"http://localhost:8003/users/all"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+    user_data = response.json()
+    return [UserResponse(**user_data) for user_data in user_data]
