@@ -5,7 +5,20 @@ from uuid import UUID
 import httpx
 from fastapi import HTTPException
 
-from app.clients.schemas.user_schemas import UserResponse
+from app.clients.schemas.user_schemas import UserResponse, UserCreate
+
+
+async def create_user(user: UserCreate):
+    url = f"http://localhost:8003/users/register/"
+    async with httpx.AsyncClient() as client:
+
+        response = await client.post(url, json=dict(user))
+
+    if response.status_code != 201:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+
+
+
 
 
 async def fetch_user_by_token(token: str) -> UserResponse:

@@ -14,3 +14,6 @@ router = APIRouter()
 async def analyze_question(request: Request, question_id: UUID):
 
     return await analysis_service.analyze_question(question_id)
+
+
+#user_id=Depends(get_current_user_id)

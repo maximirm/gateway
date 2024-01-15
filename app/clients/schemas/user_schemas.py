@@ -9,5 +9,8 @@ class UserResponse(BaseModel):
     role: str
     token: Optional[str]
 
-    class Config:
-        from_attributes = True
+
+class UserCreate(BaseModel):
+    name: str
+    password: str
+    role: str
