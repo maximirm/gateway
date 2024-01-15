@@ -70,6 +70,15 @@ async def fetch_question(question_id: UUID) -> Question:
     return Question(**question_data)
 
 
+async def delete_question(question_id: UUID):
+    url = f"http://localhost:8000/questions/{question_id}/"
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(url)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+
+
 async def create_response(response: ResponseCreate):
     url = "http://localhost:8000/responses/"
     async with httpx.AsyncClient() as client:

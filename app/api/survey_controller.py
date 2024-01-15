@@ -43,6 +43,12 @@ async def create_question(request: Request, question: QuestionCreate):
     await survey_service_client.create_question(question)
     return JSONResponse(content="Question created", status_code=200)
 
+@router.delete("/questions/{question_id}/")
+@has_role(["editor"])
+async def delete_question(request: Request, question_id: UUID):
+    await survey_service_client.delete_question(question_id)
+    return JSONResponse(content="Question deleted", status_code=200)
+
 
 @router.post("/responses/")
 async def create_response(response: ResponseCreate):
