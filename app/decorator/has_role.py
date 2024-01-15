@@ -1,6 +1,6 @@
 from functools import wraps
 
-from fastapi import HTTPException, status, Request
+from fastapi import HTTPException, Request, Depends
 from fastapi.security import OAuth2PasswordBearer
 
 from app.services import user_service
@@ -15,19 +15,22 @@ def has_role(allowed_roles: list):
             token = await oauth2_scheme.__call__(request)
             if not token:
                 raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    status_code=401,
                     detail="Unauthorized",
                 )
-
             user = await user_service.get_user(token)
             if user.role not in allowed_roles:
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
+                    status_code=403,
                     detail="Forbidden",
                 )
-
             return await func(request, *args, **kwargs)
 
         return wrapper
 
     return decorator
+
+
+async def get_current_user_id(token: str = Depends(oauth2_scheme)):
+    user = await user_service.get_user(token)
+    return user.id if user else None
