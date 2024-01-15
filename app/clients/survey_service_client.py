@@ -4,7 +4,7 @@ from uuid import UUID
 import httpx
 from fastapi import HTTPException
 
-from app.clients.schemas.survey_schemas import Question, Survey, SurveyCreate
+from app.clients.schemas.survey_schemas import Question, Survey, SurveyCreate, QuestionCreate, ResponseCreate
 from app.clients.util import custom_serializer
 
 
@@ -48,6 +48,16 @@ async def delete_surveys_by_creator_id(creator_id: UUID):
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
 
 
+async def create_question(question: QuestionCreate):
+    url = "http://localhost:8000/questions/"
+    async with httpx.AsyncClient() as client:
+        json_question = json.dumps(dict(question), default=custom_serializer)
+        response = await client.post(url, data=json_question)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+
+
 async def fetch_question(question_id: UUID) -> Question:
     url = f"http://localhost:8000/questions/{question_id}/"
     async with httpx.AsyncClient() as client:
@@ -58,3 +68,13 @@ async def fetch_question(question_id: UUID) -> Question:
 
     question_data = response.json()
     return Question(**question_data)
+
+
+async def create_response(response: ResponseCreate):
+    url = "http://localhost:8000/responses/"
+    async with httpx.AsyncClient() as client:
+        json_response = json.dumps(dict(response), default=custom_serializer)
+        response = await client.post(url, data=json_response)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])

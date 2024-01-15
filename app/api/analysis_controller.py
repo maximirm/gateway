@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.get("/analyze/question/{question_id}/", response_model=QuestionAnalyzed)
-@has_role(["admin", "editor"])
+@has_role(["editor"])
 async def analyze_question(request: Request, question_id: UUID):
     question = await survey_service_client.fetch_question(question_id)
     analyzed_question = await analysis_service_client.fetch_analyzed_question(question)
