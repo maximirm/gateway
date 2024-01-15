@@ -5,7 +5,7 @@ from starlette.responses import JSONResponse
 
 from app.clients.schemas.user_schemas import UserResponse, UserCreate, UserLogin
 from app.decorator.has_role import has_role
-from app.services import user_service
+from app.services import user_service, survey_service
 
 router = APIRouter()
 
@@ -41,5 +41,5 @@ async def get_all_users(request: Request):
 @has_role(["admin"])
 async def delete_user(request: Request, user_id: UUID):
     await user_service.delete_user(user_id)
-    # TODO: Delete all surveys by creator ID
+    await survey_service.delete_surveys_by_creator_id(user_id)
     return JSONResponse(content=f"User with id {user_id} deleted successfully", status_code=200)
