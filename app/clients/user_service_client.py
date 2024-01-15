@@ -5,24 +5,31 @@ from uuid import UUID
 import httpx
 from fastapi import HTTPException
 
-from app.clients.schemas.user_schemas import UserResponse, UserCreate
+from app.clients.schemas.user_schemas import UserResponse, UserCreate, UserLogin
 
 
 async def create_user(user: UserCreate):
-    url = f"http://localhost:8003/users/register/"
+    url = "http://localhost:8003/users/register/"
     async with httpx.AsyncClient() as client:
-
         response = await client.post(url, json=dict(user))
 
-    if response.status_code != 201:
+    if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
 
 
-
+async def login(login_data: UserLogin):
+    url = "http://localhost:8003/users/login/"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, json=dict(login_data))
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+    response_json = response.json()
+    print(response_json)
+    return response_json.get('token', None)
 
 
 async def fetch_user_by_token(token: str) -> UserResponse:
-    url = f"http://localhost:8003/users/"
+    url = "http://localhost:8003/users/"
     headers = {"Authorization": f"Bearer {token}"}
 
     async with httpx.AsyncClient() as client:
@@ -54,5 +61,3 @@ async def delete_user(user_id: UUID):
 
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
-
-

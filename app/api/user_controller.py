@@ -1,11 +1,11 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import Header, APIRouter, Request, Depends
+from fastapi import Header, APIRouter, Request
 from starlette.responses import JSONResponse
 
-from app.clients.schemas.user_schemas import UserResponse, UserCreate
-from app.decorator.has_role import has_role, get_current_user_id
+from app.clients.schemas.user_schemas import UserResponse, UserCreate, UserLogin
+from app.decorator.has_role import has_role
 from app.services import user_service
 
 router = APIRouter()
@@ -14,7 +14,13 @@ router = APIRouter()
 @router.post("/users/register/")
 async def register_user(user: UserCreate):
     await user_service.register_user(user)
-    return JSONResponse(content="User created successfully", status_code=201)
+    return JSONResponse(content="User created successfully", status_code=200)
+
+
+@router.post("/users/login/")
+async def login_user(login_data: UserLogin):
+    token = await user_service.login(login_data)
+    return JSONResponse(content={"token": token}, status_code=200)
 
 
 @router.get("/users/", response_model=UserResponse)
