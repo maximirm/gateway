@@ -22,8 +22,8 @@ async def login(login_data: UserLogin):
         response = await client.post(url, json=dict(login_data))
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
-    response_json = response.json()
-    return response_json.get('token', None)
+    user_data = response.json()
+    return UserResponse(**user_data)
 
 
 async def fetch_user_by_token(token: str) -> UserResponse:

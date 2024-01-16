@@ -18,11 +18,9 @@ async def register_user(user: UserCreate):
 
 @router.post("/users/login/")
 async def login_user(login_data: UserLogin):
-    token = await user_service_client.login(login_data)
-    if token is None:
-        raise HTTPException(
-            status_code=500, detail="Token not found in response")
-    return JSONResponse(content={"token": token}, status_code=200)
+    return await user_service_client.login(login_data)
+
+    #return JSONResponse(content={"token": token}, status_code=200)
 
 
 @router.get("/users/", response_model=UserResponse)
