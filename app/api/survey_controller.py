@@ -1,11 +1,11 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from starlette.responses import JSONResponse
 
 from app.clients import survey_service_client
 from app.clients.schemas.survey_schemas import Survey, SurveyCreate, QuestionCreate, ResponseCreate
-from app.decorator.has_role import has_role
+from app.decorator.has_role import has_role, get_current_user_id
 
 router = APIRouter()
 
@@ -25,8 +25,8 @@ async def delete_surveys_by_creator_id(request: Request, creator_id: UUID):
 
 @router.post("/surveys/")
 @has_role(["editor"])
-async def create_survey(request: Request, survey: SurveyCreate):
-    await survey_service_client.create_survey(survey)
+async def create_survey(request: Request, survey: SurveyCreate, user_id: str = Depends(get_current_user_id)):
+    await survey_service_client.create_survey(survey, user_id)
     return JSONResponse(content="Survey created", status_code=200)
 
 

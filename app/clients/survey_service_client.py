@@ -8,7 +8,9 @@ from app.clients.schemas.survey_schemas import Question, Survey, SurveyCreate, Q
 from app.clients.util import custom_serializer
 
 
-async def create_survey(survey: SurveyCreate):
+async def create_survey(survey: SurveyCreate, user_id: str):
+    if survey.creator_id != user_id:
+        raise HTTPException(status_code=400, detail="user id doesnt match creator id")
     url = "http://localhost:8000/surveys/"
     async with httpx.AsyncClient() as client:
         json_survey = json.dumps(dict(survey), default=custom_serializer)
