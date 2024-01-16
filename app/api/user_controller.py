@@ -20,8 +20,6 @@ async def register_user(user: UserCreate):
 async def login_user(login_data: UserLogin):
     return await user_service_client.login(login_data)
 
-    #return JSONResponse(content={"token": token}, status_code=200)
-
 
 @router.get("/users/", response_model=UserResponse)
 async def get_user(
