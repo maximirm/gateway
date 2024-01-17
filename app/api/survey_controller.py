@@ -10,6 +10,11 @@ from app.decorator.has_role import has_role, get_current_user_id
 router = APIRouter()
 
 
+@router.get("/surveys/{survey_id}/", response_model=Survey)
+@has_role(["editor"])
+async def get_survey(request: Request, survey_id: UUID):
+    return await survey_service_client.fetch_survey(survey_id)
+
 @router.get("/surveys/by_creator/{creator_id}/", response_model=list[Survey])
 @has_role(["admin", "editor"])
 async def get_surveys_by_creator_id(request: Request, creator_id: UUID):
@@ -23,11 +28,10 @@ async def delete_surveys_by_creator_id(request: Request, creator_id: UUID):
     return JSONResponse(content=f"Surveys for creator-ID {str(creator_id)} deleted successfully", status_code=200)
 
 
-@router.post("/surveys/")
+@router.post("/surveys/", response_model=Survey)
 @has_role(["editor"])
 async def create_survey(request: Request, survey: SurveyCreate, user_id: str = Depends(get_current_user_id)):
-    await survey_service_client.create_survey(survey, user_id)
-    return JSONResponse(content="Survey created", status_code=200)
+    return await survey_service_client.create_survey(survey, user_id)
 
 
 @router.delete("/surveys/{survey_id}/")
