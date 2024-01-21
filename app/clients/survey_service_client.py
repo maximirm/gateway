@@ -35,6 +35,18 @@ async def fetch_survey(survey_id: UUID) -> Survey:
     return Survey(**survey_data)
 
 
+async def fetch_all_surveys() -> list[Survey]:
+    url = f"http://localhost:8000/surveys/all/"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=json.loads(response.text)['detail'])
+
+    survey_data = response.json()
+    return [Survey(**survey) for survey in survey_data]
+
+
 async def fetch_surveys_by_creator_id(creator_id: UUID) -> list[Survey]:
     url = f"http://localhost:8000/surveys/by_creator/{creator_id}/"
     async with httpx.AsyncClient() as client:

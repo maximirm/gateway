@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import Header, APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request
 from starlette.responses import JSONResponse
 
 from app.clients import user_service_client, survey_service_client
@@ -19,15 +19,6 @@ async def register_user(user: UserCreate):
 @router.post("/users/login/")
 async def login_user(login_data: UserLogin):
     return await user_service_client.login(login_data)
-
-
-@router.get("/users/", response_model=UserResponse)
-async def get_user(
-        authorization: str = Header(..., description="Authorization token")
-
-):
-    token = authorization.split("Bearer ")[1]
-    return await user_service_client.fetch_user_by_token(token)
 
 
 @router.get("/users/all/", response_model=list[UserResponse])

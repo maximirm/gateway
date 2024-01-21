@@ -10,10 +10,16 @@ from app.decorator.has_role import has_role, get_current_user_id
 router = APIRouter()
 
 
+@router.get("/surveys/all/", response_model=list[Survey])
+async def get_all_surveys():
+    return await survey_service_client.fetch_all_surveys()
+
+
 @router.get("/surveys/{survey_id}/", response_model=Survey)
 @has_role(["editor"])
 async def get_survey(request: Request, survey_id: UUID):
     return await survey_service_client.fetch_survey(survey_id)
+
 
 @router.get("/surveys/by_creator/{creator_id}/", response_model=list[Survey])
 @has_role(["admin", "editor"])
@@ -46,6 +52,7 @@ async def delete_survey(request: Request, survey_id: UUID):
 async def create_question(request: Request, question: QuestionCreate):
     await survey_service_client.create_question(question)
     return JSONResponse(content="Question created", status_code=200)
+
 
 @router.delete("/questions/{question_id}/")
 @has_role(["editor"])
