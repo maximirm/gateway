@@ -26,7 +26,7 @@ class Question(QuestionCreate):
     responses: list[Response] = []
 
 
-class QuestionAnalyzed(Question):
+class AnalyzedQuestion(Question):
     analysis_responses: Optional[dict] = None
     analysis_respondents: Optional[dict] = None
 
@@ -40,3 +40,8 @@ class SurveyCreate(BaseModel):
 class Survey(SurveyCreate):
     id: UUID4
     questions: list[Question] = []
+
+
+class AnalyzedSurvey(SurveyCreate):
+    id: UUID4
+    analyzed_questions: list[AnalyzedQuestion] = []
