@@ -15,7 +15,29 @@ async def get_all_surveys():
     return await survey_service_client.fetch_all_surveys()
 
 
-@router.get("/surveys/{survey_id}/", response_model=Survey)
+@router.get(
+    "/surveys/{survey_id}/",
+    response_model=Survey,
+    responses={
+        401: {
+            "description": "Token is missing",
+            "content": {
+                "application/json":
+                    {
+                        "example": {"detail": "Unauthorized"}
+                    }
+            }
+        },
+        403: {
+            "description": "User has insufficient permission",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Forbidden"}
+                }
+            }
+        },
+    }
+)
 @has_role(["editor"])
 async def get_survey(request: Request, survey_id: UUID):
     return await survey_service_client.fetch_survey(survey_id)
