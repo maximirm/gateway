@@ -26,9 +26,7 @@ def has_role(allowed_roles: list):
                     detail="Forbidden",
                 )
             return await func(request, *args, **kwargs)
-
         return wrapper
-
     return decorator
 
 
