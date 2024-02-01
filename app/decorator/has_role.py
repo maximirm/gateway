@@ -19,7 +19,11 @@ def has_role(allowed_roles: list):
                     detail="Unauthorized",
                 )
             user = await user_service_client.fetch_user_by_token(token)
-
+            if user is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"User with token {token} not found"
+                )
             if user.role not in allowed_roles:
                 raise HTTPException(
                     status_code=403,
