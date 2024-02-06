@@ -7,11 +7,13 @@ from fastapi import HTTPException
 from app.clients.schemas.survey_schemas import Question, Survey, SurveyCreate, QuestionCreate, ResponseCreate
 from app.clients.util import custom_serializer
 
+BASE_URL = "survey:8000"
+
 
 async def create_survey(survey: SurveyCreate, user_id: str) -> Survey:
     if survey.creator_id != user_id:
         raise HTTPException(status_code=400, detail="user id doesnt match creator id")
-    url = "http://localhost:8000/surveys/"
+    url = f"http://{BASE_URL}/surveys/"
     async with httpx.AsyncClient() as client:
         json_survey = json.dumps(dict(survey), default=custom_serializer)
         response = await client.post(url, data=json_survey)
@@ -24,7 +26,7 @@ async def create_survey(survey: SurveyCreate, user_id: str) -> Survey:
 
 
 async def fetch_survey(survey_id: UUID) -> Survey:
-    url = f"http://localhost:8000/surveys/{survey_id}/"
+    url = f"http://{BASE_URL}/surveys/{survey_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 
@@ -36,7 +38,7 @@ async def fetch_survey(survey_id: UUID) -> Survey:
 
 
 async def fetch_all_surveys() -> list[Survey]:
-    url = f"http://localhost:8000/surveys/all/"
+    url = f"http://{BASE_URL}/surveys/all/"
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 
@@ -48,7 +50,7 @@ async def fetch_all_surveys() -> list[Survey]:
 
 
 async def fetch_surveys_by_creator_id(creator_id: UUID) -> list[Survey]:
-    url = f"http://localhost:8000/surveys/by_creator/{creator_id}/"
+    url = f"http://{BASE_URL}/surveys/by_creator/{creator_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 
@@ -60,7 +62,7 @@ async def fetch_surveys_by_creator_id(creator_id: UUID) -> list[Survey]:
 
 
 async def delete_survey(survey_id: UUID):
-    url = f"http://localhost:8000/surveys/{survey_id}/"
+    url = f"http://{BASE_URL}/surveys/{survey_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.delete(url)
 
@@ -69,7 +71,7 @@ async def delete_survey(survey_id: UUID):
 
 
 async def delete_surveys_by_creator_id(creator_id: UUID):
-    url = f"http://localhost:8000/surveys/by_creator/{creator_id}/"
+    url = f"http://{BASE_URL}/surveys/by_creator/{creator_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.delete(url)
 
@@ -78,7 +80,7 @@ async def delete_surveys_by_creator_id(creator_id: UUID):
 
 
 async def create_question(question: QuestionCreate):
-    url = "http://localhost:8000/questions/"
+    url = f"http://{BASE_URL}/questions/"
     async with httpx.AsyncClient() as client:
         json_question = json.dumps(dict(question), default=custom_serializer)
         response = await client.post(url, data=json_question)
@@ -88,7 +90,7 @@ async def create_question(question: QuestionCreate):
 
 
 async def fetch_question(question_id: UUID) -> Question:
-    url = f"http://localhost:8000/questions/{question_id}/"
+    url = f"http://{BASE_URL}/questions/{question_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 
@@ -100,7 +102,7 @@ async def fetch_question(question_id: UUID) -> Question:
 
 
 async def delete_question(question_id: UUID):
-    url = f"http://localhost:8000/questions/{question_id}/"
+    url = f"http://{BASE_URL}/questions/{question_id}/"
     async with httpx.AsyncClient() as client:
         response = await client.delete(url)
 
@@ -109,7 +111,7 @@ async def delete_question(question_id: UUID):
 
 
 async def create_response(response: ResponseCreate):
-    url = "http://localhost:8000/responses/"
+    url = f"http://{BASE_URL}/responses/"
     async with httpx.AsyncClient() as client:
         json_response = json.dumps(dict(response), default=custom_serializer)
         response = await client.post(url, data=json_response)

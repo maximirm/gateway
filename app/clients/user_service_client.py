@@ -6,9 +6,11 @@ from fastapi import HTTPException
 
 from app.clients.schemas.user_schemas import UserResponse, UserCreate, UserLogin
 
+BASE_URL = "user:8003"
+
 
 async def create_user(user: UserCreate):
-    url = "http://localhost:8003/users/register/"
+    url = f"http://{BASE_URL}/users/register/"
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=dict(user))
 
@@ -17,7 +19,7 @@ async def create_user(user: UserCreate):
 
 
 async def login(login_data: UserLogin):
-    url = "http://localhost:8003/users/login/"
+    url = f"http://{BASE_URL}/users/login/"
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=dict(login_data))
     if response.status_code != 200:
@@ -27,7 +29,7 @@ async def login(login_data: UserLogin):
 
 
 async def fetch_user_by_token(token: str) -> UserResponse:
-    url = "http://localhost:8003/users/"
+    url = f"http://{BASE_URL}/users/"
     headers = {"Authorization": f"Bearer {token}"}
 
     async with httpx.AsyncClient() as client:
@@ -40,7 +42,7 @@ async def fetch_user_by_token(token: str) -> UserResponse:
 
 
 async def fetch_all_users() -> list[UserResponse]:
-    url = "http://localhost:8003/users/all/"
+    url = f"http://{BASE_URL}/users/all/"
 
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
@@ -52,7 +54,7 @@ async def fetch_all_users() -> list[UserResponse]:
 
 
 async def delete_user(user_id: UUID):
-    url = f"http://localhost:8003/users/{user_id}/"
+    url = f"http://{BASE_URL}/users/{user_id}/"
 
     async with httpx.AsyncClient() as client:
         response = await client.delete(url)
